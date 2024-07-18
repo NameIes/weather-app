@@ -1,0 +1,42 @@
+<div class="w-100 d-flex justify-content-center align-items-center gap-1">
+  <div class="input-group" style="max-width: 400px;">
+    <input
+    type="text"
+    class="form-control"
+    aria-label="Search"
+    placeholder="Type your city..."
+    v-model="search_text"
+    @input="on_search"
+    @focus="search_focused = true"
+    @blur="on_blur"
+    >
+    <span class="input-group-text">&#128269;</span>
+  </div>
+</div>
+<div class="w-100 d-flex justify-content-center align-items-top gap-1 position-relative">
+  <div
+    style="width: 400px"
+    class="shadow p-2 rounded position-absolute"
+    v-if="search_text.length > 1 && search_focused"
+  >
+    <div v-if="search_loading">
+      <div class="spinner-border" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+    </div>
+    <div v-else>
+      <div v-if="cities_list">
+        <button
+          v-for="(city, i) in cities_list"
+          :key="i"
+          class="d-flex align-items-center gap-1 btn btn-light btn-sm w-100"
+          @click="on_select(city)"
+        >
+          <img :src="'https://flagsapi.com/' + [[ city.country_code ]] + '/flat/24.png'">
+          [[ city.name ]]
+        </button>
+      </div>
+      <div v-else>Not found.</div>
+    </div>
+  </div>
+</div>
