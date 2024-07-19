@@ -2,6 +2,7 @@ import json
 import requests
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render
+from weather.models import SearchCity
 
 
 def search_geo(request):
@@ -89,6 +90,9 @@ def get_two_weeks(city):
 
 def get_weather(request):
     city = json.loads(request.GET.get('city', ''))
+    city_stat, _ = SearchCity.objects.get_or_create(name=city['name'])
+    city_stat.searchs = city_stat.searchs + 1
+    city_stat.save()
 
     try:
         result = {
@@ -100,6 +104,12 @@ def get_weather(request):
         return HttpResponse(status=500, content=e)
 
     return JsonResponse(json.dumps(result), safe=False)
+
+
+def get_stats(request):
+    all_cities = SearchCity.objects.order_by('-searchs')
+    all_cities = [city.serialize() for city in all_cities]
+    return JsonResponse(all_cities, safe=False)
 
 
 def index(request):
