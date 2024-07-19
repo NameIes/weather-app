@@ -1,0 +1,42 @@
+<div class="py-3 px-3 mt-5 shadow rounded bg-light" v-if="selected_city">
+  <div class="row">
+    <div class="col-12 col-lg-6 col-xl-3" v-if="selected_city && current">
+      <h4 class="fw-bold">[[ selected_city.name ]], [[ convertTimeString(current.time) ]]</h4>
+      <div class="d-flex">
+        <h1 style="font-size: 72pt">[[ current.temperature_2m > -1 ? '+' : '-' ]][[ current.temperature_2m ]]˚</h1>
+        <img
+          :src="parseWeatherCode(current.weather_code, current.is_day)['image']"
+          :alt="parseWeatherCode(current.weather_code, current.is_day)['description']"
+          width="120px"
+          style="-webkit-filter: drop-shadow(5px 5px 5px rgba(0,0,0,0.4)); filter: drop-shadow(5px 5px 5px rgba(0,0,0,0.4));"
+        >
+      </div>
+    </div>
+
+    <div class="col-12 col-lg-6 col-xl-9 d-flex flex-column">
+      <div class="d-flex" v-if="current">
+        <span>💨 [[ current.wind_speed_10m ]] m/s, [[ current.wind_direction_10m ]]</span>
+        <span class="mx-4">💧 [[ current.relative_humidity_2m ]]%</span>
+        <span>⏲ [[ current.pressure_msl ]] mmHg</span>
+      </div>
+      <div
+        class="d-flex h-100 align-items-end justify-content-between flex-wrap"
+        v-if="today"
+      >
+        <div
+          v-for="(i, index) in 24"
+          class="d-flex flex-column text-center"
+        >
+          <img
+            :src="parseWeatherCode(today.weather_code[index], today.is_day[index])['image']"
+            :alt="parseWeatherCode(today.weather_code[index], today.is_day[index])['description']"
+            width="32px"
+            style="-webkit-filter: drop-shadow(2px 2px 2px rgba(0,0,0,0.3)); filter: drop-shadow(2px 2px 2px rgba(0,0,0,0.3));"
+          >
+          <h6 class="fw-bold my-0">[[ Math.floor(today.temperature_2m[index]) > -1 ? '+' : '-' ]][[ Math.floor(today.temperature_2m[index]) ]]˚</h6>
+          <small>[[ today.time[index].split('T')[1] ]]</small>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

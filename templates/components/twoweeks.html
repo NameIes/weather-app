@@ -1,0 +1,16 @@
+<h3 class="mt-3 mb-1" v-if="two_weeks">Two weeks</h3>
+<div class="wgrid" v-if="two_weeks">
+  <div
+    class="shadow rounded bg-light p-2 d-flex flex-column align-items-center justify-content-center"
+    v-for="(i, index) in 14"
+  >
+    <img
+      :src="parseWeatherCode(two_weeks.weather_code[index], 1)['image']"
+      :alt="parseWeatherCode(two_weeks.weather_code[index], 1)['description']"
+      width="64px"
+      style="-webkit-filter: drop-shadow(5px 5px 5px rgba(0,0,0,0.4)); filter: drop-shadow(5px 5px 5px rgba(0,0,0,0.4));"
+    >
+    <h6 class="fw-bold my-0">[[ Math.floor(two_weeks.temperature_2m_max[index]) > -1 ? '+' : '-' ]][[ Math.floor(two_weeks.temperature_2m_max[index]) ]]˚</h6>
+    <h6 class="fw-bold">[[ convertTimeString(two_weeks.time[index]) ]]</h6>
+  </div>
+</div>

@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block main %}
+  <header class="py-2">
+    {% include "components/search.html" %}
+    <div v-if="selected_city">
+      {% include "components/today.html" %}
+      {% include "components/twoweeks.html" %}
+    </div>
+    <div v-else>
+      <h3 class="text-center mt-4">Please select your city.</h3>
+    </div>
+  </header>
+{% endblock main %}
