@@ -63,7 +63,7 @@ class WeatherTest(TestCase):
             "admin1": "England",
             "admin2": "Greater London"
         })
-        for i in range(5):
+        for _ in range(5):
             response = self.client.get('/api/get-weather/?city=' + london)
 
         result = [{'name': 'London', 'searchs': 5}]
