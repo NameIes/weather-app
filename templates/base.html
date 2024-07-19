@@ -53,13 +53,32 @@
         methods: {
           on_search() {
             this.search_loading = true;
-            if (this.search_text.length < 2) return;
+            if (this.search_text.length < 2) {
+              this.cities_list = JSON.parse(localStorage.getItem('hist'));
+              this.search_loading = false;
+              return;
+            };
             api.get('search-geo/', {
               params: {
                 name: this.search_text,
               }
             }).then((response) => {
-              this.cities_list = response.data.results;
+              if (response.data.results) {
+                let hist = JSON.parse(localStorage.getItem('hist'));
+                if (!hist) {
+                  this.cities_list = response.data.results;
+                }
+                let cities = hist.concat(response.data.results);
+                cities = cities.filter((value, index) => {
+                  const _value = JSON.stringify(value);
+                  return index === cities.findIndex(obj => {
+                    return JSON.stringify(obj) === _value;
+                  });
+                });
+                this.cities_list = cities;
+              } else {
+                this.cities_list = JSON.parse(localStorage.getItem('hist'));
+              }
             }).catch((err) => {
               console.error(err);
             }).finally(() => {
@@ -70,6 +89,10 @@
             setTimeout(() => {
               this.search_focused = false;
             }, 150);
+          },
+          on_search_focused() {
+            this.search_focused = true;
+            this.cities_list = JSON.parse(localStorage.getItem('hist'));
           },
           getWindDirection(degrees) {
             if (degrees >= 337.5 || degrees < 22.5) {
@@ -386,6 +409,15 @@
           on_select(city) {
             this.selected_city = city;
             this.search_text = city.name;
+            let hist = localStorage.getItem('hist');
+            if (!hist) {
+              hist = [];
+            } else {
+              hist = JSON.parse(hist);
+            }
+            city.is_recent = true;
+            hist.push(city);
+            localStorage.setItem('hist', JSON.stringify(hist.slice(-3)));
 
             api.get('get-weather/', {
               params: {

@@ -7,7 +7,7 @@
     placeholder="Type your city..."
     v-model="search_text"
     @input="on_search"
-    @focus="search_focused = true"
+    @focus="on_search_focused"
     @blur="on_blur"
     >
     <span class="input-group-text">&#128269;</span>
@@ -17,7 +17,7 @@
   <div
     style="width: 400px; z-index: 999; background-color: white"
     class="shadow p-2 rounded position-absolute"
-    v-if="search_text.length > 1 && search_focused"
+    v-if="search_focused"
   >
     <div v-if="search_loading">
       <div class="spinner-border" role="status">
@@ -30,6 +30,7 @@
           v-for="(city, i) in cities_list"
           :key="i"
           class="d-flex align-items-center gap-1 btn btn-light btn-sm w-100"
+          :class="[city.is_recent ? 'text-secondary' : '']"
           @click="on_select(city)"
         >
           <img :src="'https://flagsapi.com/' + [[ city.country_code ]] + '/flat/24.png'">
