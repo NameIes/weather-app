@@ -89,10 +89,15 @@ def get_two_weeks(city):
 
 
 def get_weather(request):
-    city = json.loads(request.GET.get('city', ''))
-    city_stat, _ = SearchCity.objects.get_or_create(name=city['name'])
-    city_stat.searchs = city_stat.searchs + 1
-    city_stat.save()
+    try:
+        city = json.loads(request.GET.get('city', ''))
+        city_stat, _ = SearchCity.objects.get_or_create(name=city['name'])
+        city_stat.searchs = city_stat.searchs + 1
+        city_stat.save()
+    except json.decoder.JSONDecodeError:
+        return HttpResponse(status=400, content='Bad request')
+    except KeyError:
+        return HttpResponse(status=400, content='Bad request')
 
     try:
         result = {
