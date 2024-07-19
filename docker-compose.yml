@@ -1,0 +1,36 @@
+version: '3'
+
+services:
+  db:
+    image: postgres
+    environment:
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    container_name: db
+    volumes:
+      - pgdbdata:/var/lib/postgresql/data/
+    ports:
+      - 5432:5432
+    networks:
+      - weather_network
+
+  django:
+    build: .
+    container_name: django
+    command: ./docker-entrypoint.sh
+    volumes:
+      - .:/usr/src/app
+    ports:
+      - 8000:8000
+    depends_on:
+      - db
+    networks:
+      - weather_network
+
+networks:
+  weather_network:
+    driver: bridge
+
+volumes:
+  pgdbdata: null
